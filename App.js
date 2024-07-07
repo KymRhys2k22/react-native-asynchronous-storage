@@ -15,30 +15,23 @@ export default function App() {
   const [customers, setCustomers] = useState([]);
 
   useEffect(() => {
-    async () => {
+    (async () => {
       try {
-        const customers = await AsyncStorage.getItem("customers");
-        setCustomers(customers === null ? [] : JSON.parse(customers));
+        const customer = await AsyncStorage.getItem("customers");
+
+        setCustomers(customers === null ? [] : JSON.parse(customer));
       } catch (e) {}
-    };
+    })();
   }, []);
 
   useEffect(() => {
-    async () => {
+    (async () => {
       try {
         await AsyncStorage.setItem("customers", JSON.stringify(customers));
       } catch (e) {}
-    };
+    })();
   }, [customers]);
-  const clearAll = async () => {
-    try {
-      await AsyncStorage.clear();
-    } catch (e) {
-      // clear error
-    }
 
-    console.log("Done.");
-  };
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -54,7 +47,6 @@ export default function App() {
           onChangeText={(data) => onChangeTextInput(data)}
           style={styles.inputText}
           placeholder="items"
-          pla
         />
         <TouchableOpacity
           onPress={() => {
@@ -79,6 +71,7 @@ export default function App() {
             .reverse()
             .map((customer, index) => (
               <View
+                key={index}
                 style={{
                   backgroundColor: index % 2 === 0 ? "#fff" : "#f2f2f2",
                   width: "100",
